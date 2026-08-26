@@ -1,0 +1,23 @@
+# Local Python environment
+.venv/
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Runtime data: generated locally, never committed
+data/*.db
+data/*.db-*
+logs/*.jsonl
+logs/*.jsonl.*
+
+# Secrets: CURRENT•SEA never commits credentials
+.env
+.env.*
+!.env.example
+
+# Editors and operating systems
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+
