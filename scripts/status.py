@@ -1,4 +1,4 @@
-"""Show the tiny amount of operational state that matters in v0.002."""
+"""Show the tiny amount of operational state that matters in v0.003."""
 
 from app.database import build_engine, initialize_database, read_status
 from app.settings import Settings
@@ -12,7 +12,7 @@ def main() -> None:
     asset = status["asset"]
     summary = status["summary"]
 
-    print("CURRENT•SEA v0.002")
+    print("CURRENT•SEA v0.003")
     print()
     print("WHERE WE ARE")
     print(f"{asset['development_stage']} — {asset['development_name']}")

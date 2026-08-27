@@ -2,7 +2,7 @@
 
 ## WHERE WE ARE
 
-**Project:** v0.002
+**Project:** v0.003
 **Development stage:** `3 — TRIAL`  
 **Economic state:** `ACTIVE`  
 **Revenue state:** No revenue exists, is owed, or is implied.

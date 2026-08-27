@@ -3,7 +3,7 @@
   "name": "io.github.YOUR_GITHUB_USERNAME/current-sea",
   "title": "CURRENT SEA — Ambiguity Scan",
   "description": "A deterministic, explainable scan for wording that may require clarification. Submitted text is not retained.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "remotes": [
     {
       "type": "streamable-http",

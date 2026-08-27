@@ -1,4 +1,4 @@
-"""CURRENT•SEA v0.002: one service, two machine-callable doorways."""
+"""CURRENT•SEA v0.003: one service, two machine-callable doorways."""
 
 from contextlib import asynccontextmanager
 
@@ -39,7 +39,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         title="CURRENT•SEA",
         summary="One observable digital economic surface.",
         description=(
-            "v0.002 exposes one transparent micro-asset over REST and remote MCP: "
+            "v0.003 exposes one transparent micro-asset over REST and remote MCP: "
             "an explainable scan for wording that may require clarification."
         ),
         version=__version__,

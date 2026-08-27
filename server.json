@@ -3,7 +3,7 @@
   "name": "io.github.Bowieboii/current-sea",
   "title": "CURRENT SEA - Ambiguity Scan",
   "description": "Explainable ambiguity signals for text. Submitted text is processed but never retained.",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "remotes": [
     {
       "type": "streamable-http",

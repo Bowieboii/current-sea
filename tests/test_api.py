@@ -32,7 +32,7 @@ def test_health_reports_trial_stage(client):
     assert response.json() == {
         "status": "ok",
         "project": "CURRENT•SEA",
-        "version": "0.0.2",
+        "version": "0.0.3",
         "development_stage": "3 — TRIAL",
     }
 

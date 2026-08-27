@@ -11,7 +11,7 @@ import re
 
 ASSET_ID = "ambiguity-scan"
 ASSET_NAME = "Ambiguity Scan"
-ASSET_VERSION = "0.1.0"
+ASSET_VERSION = "0.1.1"
 METHOD_VERSION = "deterministic-heuristics-v1"
 
 

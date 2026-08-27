@@ -1,3 +1,3 @@
-"""CURRENT•SEA v0.002 application package."""
+"""CURRENT•SEA v0.003 application package."""
 
-__version__ = "0.0.2"
+__version__ = "0.0.3"
