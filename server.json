@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.Bowieboii/current-sea",
+  "title": "CURRENT SEA - Ambiguity Scan",
+  "description": "Explainable ambiguity signals for text. Submitted text is processed but never retained.",
+  "version": "0.0.2",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://current-sea.fastapicloud.dev/mcp"
+    }
+  ]
+}

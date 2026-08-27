@@ -21,3 +21,6 @@ logs/*.jsonl.*
 .DS_Store
 Thumbs.db
 
+
+mcp-publisher.exe
+mcp-publisher.tar.gz

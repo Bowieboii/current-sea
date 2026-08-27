@@ -5,6 +5,7 @@ description = "CURRENT•SEA v0.002 — one externally deployable machine-callab
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 dependencies = [
+    "fastapi-cloud-cli>=0.24.0",
     "fastapi[standard]==0.141.1",
     "mcp==2.1.1",
     "psycopg[binary]==3.3.4",
