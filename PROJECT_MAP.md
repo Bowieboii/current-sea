@@ -2,25 +2,25 @@
 
 ## WHERE WE ARE
 
-**Project:** v0.001  
+**Project:** v0.002
 **Development stage:** `3 — TRIAL`  
 **Economic state:** `ACTIVE`  
 **Revenue state:** No revenue exists, is owed, or is implied.
 
-The workshop exists. One asset has moved from possibility to a working form that
-reality can interact with locally.
+The asset has a deployment contract and a machine-native entrance. It remains
+in TRIAL until an external agent invokes the deployed endpoint.
 
 ## WHAT EXISTS
 
 - One Python project and Git-ready repository.
-- One machine-callable capability: `POST /v1/ambiguity/scan`.
+- One capability exposed through REST and remote MCP.
 - One explainable, deterministic ambiguity-scanning method.
-- One SQLite asset registry containing `ambiguity-scan`.
+- One portable SQLite/PostgreSQL asset registry containing `ambiguity-scan`.
 - One invocation table that records usage without retaining submitted text.
 - One rotating structured log.
 - One status command for viewing the asset and its invocation count.
-- Five automated tests.
-- Interactive API documentation at `/docs` while the service runs.
+- Automated proof for both machine surfaces, privacy, migration, and limits.
+- A controlled free-tier deployment path and MCP Registry manifest template.
 
 ## WHAT WE JUST LEARNED
 
@@ -30,21 +30,22 @@ reality can interact with locally.
   economic value.
 - Observability does not require retaining the content people submit.
 - The private `0–7` lifecycle can remain technically ordinary and useful.
+- A local callable surface is not enough; discoverable external machine access
+  is the next empirical threshold.
 - We have not learned whether anyone needs or would pay for this asset. That
   question belongs to reality, not imagination.
 
 ## THE NEXT SMALLEST STEP
 
-Run the project locally and invoke the asset once with a sentence from real
-life. Then inspect the result and run:
+Deploy the service, attach durable telemetry, verify one remote MCP invocation,
+and publish the endpoint to the MCP Registry. Start with:
 
 ```powershell
-uv run python scripts/status.py
+uv run fastapi deploy
 ```
 
-Only after that foothold is confirmed should we decide whether to refine this
-asset, expose it in a controlled public environment, or create its first
-adjacent asset.
+After that foothold is confirmed, wait for external machine use before adding
+payment mechanics or creating adjacent assets.
 
 ## DECISION LEDGER
 
@@ -52,12 +53,14 @@ adjacent asset.
 |---|---|---|
 | Language | Python | Readable, widely supported, appropriate for small services |
 | HTTP framework | FastAPI | Validation and interactive docs with little code |
-| Database | SQLite | Real persistence without a server or subscription |
+| Database | SQLite locally, Neon PostgreSQL remotely | Durable telemetry without an initial bill |
 | Environment | uv | One command handles Python, dependencies, and lockfile |
 | First asset | Ambiguity Scan | Useful, explainable, cheap, testable, and descendant-rich |
 | AI dependency | None | Zero marginal model cost and fully auditable behavior |
 | Data retention | Aggregate metadata only | Observe use without collecting unnecessary text |
-| Deployment | Local only | Prove form before adding public infrastructure |
+| Deployment | FastAPI Cloud free tier | Public HTTPS, native framework path, controlled cost |
+| Agent protocol | Remote MCP | Direct machine discovery and invocation |
+| Public discovery | MCP Registry | Quiet technical discoverability without personal promotion |
 | Monetization | None yet | Demand and reliability must precede payment mechanics |
 
 ## PRIVATE METALANGUAGE, PUBLIC MECHANISM
@@ -68,4 +71,3 @@ asset is registered at `3 — TRIAL`. This is meaningful to the project without
 obscuring behavior or overruling telemetry.
 
 > Mystical internally. Empirical externally.
-

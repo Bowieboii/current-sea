@@ -1,42 +1,56 @@
-"""CURRENT•SEA v0.001 HTTP application."""
+"""CURRENT•SEA v0.002: one service, two machine-callable doorways."""
 
 from contextlib import asynccontextmanager
-from time import perf_counter
-from uuid import uuid4
 
-from fastapi import FastAPI
+from fastapi import FastAPI, HTTPException
+from mcp.server.transport_security import TransportSecuritySettings
 
 from app import __version__
-from app.database import initialize_database, record_invocation, utc_now
+from app.database import build_engine, initialize_database, read_status
 from app.lifecycle import DevelopmentStage
-from app.scanner import ASSET_ID, ASSET_VERSION, scan_text
+from app.mcp_server import build_mcp_server
 from app.schemas import HealthResponse, ScanRequest, ScanResponse
+from app.service import AssetService, InvalidAssetInput, InvocationLimitReached
 from app.settings import Settings
-from app.telemetry import build_invocation_logger, log_invocation
+from app.telemetry import build_invocation_logger
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
     runtime = settings or Settings.from_environment()
-    invocation_logger = build_invocation_logger(runtime.log_path)
+    engine = build_engine(runtime.database_url)
+    invocation_logger = build_invocation_logger(runtime.log_path, runtime.log_mode)
+    service = AssetService(engine, runtime, invocation_logger)
+    mcp_server = build_mcp_server(service)
+    mcp_app = mcp_server.streamable_http_app(
+        transport_security=TransportSecuritySettings(
+            allowed_hosts=list(runtime.allowed_hosts),
+            allowed_origins=list(runtime.allowed_origins),
+        )
+    )
 
     @asynccontextmanager
     async def lifespan(_: FastAPI):
-        initialize_database(runtime.db_path)
-        yield
+        initialize_database(engine)
+        async with mcp_server.session_manager.run():
+            yield
+        engine.dispose()
 
     app = FastAPI(
         title="CURRENT•SEA",
         summary="One observable digital economic surface.",
         description=(
-            "v0.001 exposes one transparent micro-asset: an explainable scan for "
-            "wording that may require clarification."
+            "v0.002 exposes one transparent micro-asset over REST and remote MCP: "
+            "an explainable scan for wording that may require clarification."
         ),
         version=__version__,
         lifespan=lifespan,
     )
     app.state.settings = runtime
+    app.state.engine = engine
+    app.state.asset_service = service
+    app.state.mcp_server = mcp_server
 
-    @app.get("/health", response_model=HealthResponse, tags=["workshop"])
+    @app.get("/health", response_model=HealthResponse, tags=["operations"])
     def health() -> HealthResponse:
         return HealthResponse(
             status="ok",
@@ -51,44 +65,22 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         tags=["economic-surface"],
     )
     def ambiguity_scan(payload: ScanRequest) -> ScanResponse:
-        started = perf_counter()
-        request_id = str(uuid4())
-        occurred_at = utc_now()
-        result = scan_text(payload.text)
-        duration_ms = round((perf_counter() - started) * 1000, 3)
+        try:
+            result = service.invoke(payload.text, source="rest")
+        except InvalidAssetInput as error:
+            raise HTTPException(status_code=422, detail=str(error)) from error
+        except InvocationLimitReached as error:
+            raise HTTPException(status_code=429, detail=str(error)) from error
+        return ScanResponse(**result)
 
-        record_invocation(
-            runtime.db_path,
-            request_id=request_id,
-            occurred_at=occurred_at,
-            input_char_count=len(payload.text),
-            signal_count=int(result["signal_count"]),
-            ambiguity_score=int(result["ambiguity_score"]),
-            duration_ms=duration_ms,
-            outcome="completed",
-        )
-        log_invocation(
-            invocation_logger,
-            {
-                "asset_id": ASSET_ID,
-                "ambiguity_score": result["ambiguity_score"],
-                "duration_ms": duration_ms,
-                "event": "asset.invoked",
-                "input_char_count": len(payload.text),
-                "method": result["method"],
-                "outcome": "completed",
-                "occurred_at": occurred_at,
-                "request_id": request_id,
-                "signal_count": result["signal_count"],
-            },
-        )
+    @app.get("/v1/status", tags=["observation"])
+    def status() -> dict[str, object]:
+        """Return aggregate usage only; submitted text is never retained."""
+        return read_status(engine)
 
-        return ScanResponse(
-            request_id=request_id,
-            asset_id=ASSET_ID,
-            asset_version=ASSET_VERSION,
-            **result,
-        )
+    # The SDK's Streamable HTTP application serves the remote MCP endpoint at
+    # /mcp. Mount last so the named FastAPI routes above retain precedence.
+    app.mount("/", mcp_app)
 
     return app
 

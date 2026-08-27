@@ -1,11 +1,14 @@
 [project]
 name = "current-sea"
-version = "0.0.1"
-description = "CURRENT•SEA v0.001 — one observable, legitimate digital micro-asset"
+version = "0.0.2"
+description = "CURRENT•SEA v0.002 — one externally deployable machine-callable asset"
 readme = "README.md"
 requires-python = ">=3.12,<3.15"
 dependencies = [
-    "fastapi[standard-no-fastapi-cloud-cli]==0.141.1",
+    "fastapi[standard]==0.141.1",
+    "mcp==2.1.1",
+    "psycopg[binary]==3.3.4",
+    "sqlalchemy==2.0.52",
 ]
 
 [build-system]

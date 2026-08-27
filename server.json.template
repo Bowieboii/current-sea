@@ -1,0 +1,13 @@
+{
+  "$schema": "https://static.modelcontextprotocol.io/schemas/2025-12-11/server.schema.json",
+  "name": "io.github.YOUR_GITHUB_USERNAME/current-sea",
+  "title": "CURRENT SEA — Ambiguity Scan",
+  "description": "A deterministic, explainable scan for wording that may require clarification. Submitted text is not retained.",
+  "version": "0.0.2",
+  "remotes": [
+    {
+      "type": "streamable-http",
+      "url": "https://YOUR_FASTAPI_CLOUD_HOST/mcp"
+    }
+  ]
+}

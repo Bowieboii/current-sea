@@ -26,6 +26,9 @@ class ScanResponse(BaseModel):
     request_id: str
     asset_id: str
     asset_version: str
+    source: str
+    daily_limit: int = Field(ge=1)
+    daily_remaining: int = Field(ge=0)
     method: str
     ambiguous: bool
     ambiguity_score: int = Field(ge=0, le=100)
@@ -39,4 +42,3 @@ class HealthResponse(BaseModel):
     project: str
     version: str
     development_stage: str
-

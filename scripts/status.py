@@ -1,17 +1,18 @@
-"""Show the tiny amount of operational state that matters in v0.001."""
+"""Show the tiny amount of operational state that matters in v0.002."""
 
-from app.database import initialize_database, read_status
+from app.database import build_engine, initialize_database, read_status
 from app.settings import Settings
 
 
 def main() -> None:
     settings = Settings.from_environment()
-    initialize_database(settings.db_path)
-    status = read_status(settings.db_path)
+    engine = build_engine(settings.database_url)
+    initialize_database(engine)
+    status = read_status(engine)
     asset = status["asset"]
     summary = status["summary"]
 
-    print("CURRENT•SEA v0.001")
+    print("CURRENT•SEA v0.002")
     print()
     print("WHERE WE ARE")
     print(f"{asset['development_stage']} — {asset['development_name']}")
@@ -22,13 +23,14 @@ def main() -> None:
     print()
     print("WHAT REALITY HAS DONE")
     print(f"Invocations: {summary['invocation_count']}")
+    print(f"By source: {summary['by_source'] or {}}")
     print(f"Signals returned: {summary['total_signals']}")
     print(f"Average internal duration: {summary['average_duration_ms']:.3f} ms")
     print()
     print("NEXT SMALLEST STEP")
-    print("Invoke the asset once with a real sentence and inspect the result.")
+    print("Deploy the MCP endpoint, verify it, then publish its registry manifest.")
+    engine.dispose()
 
 
 if __name__ == "__main__":
     main()
-

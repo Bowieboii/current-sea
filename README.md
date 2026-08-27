@@ -1,47 +1,40 @@
-# CURRENT•SEA v0.001
+# CURRENT•SEA v0.002
 
-One real, observable digital micro-asset—not a simulated business and not a
-claim about future money.
+One externally deployable, machine-native digital micro-asset—not a writing
+exercise, a simulated business, or a claim about future money.
 
 This first asset accepts text and flags wording that may require clarification.
 It uses transparent rules, returns reasons and clarification questions, records
 that it was invoked, and does **not** store the submitted text.
 
-## The one action to take now
+## Its intended use
 
-Extract this project, open PowerShell inside the `CURRENT-SEA` folder, and run:
+AI agents call `scan_ambiguity` over remote MCP when they need a cheap,
+deterministic check for vague wording. REST remains available for ordinary
+software clients. Both doorways record privacy-minimized usage telemetry and
+never retain submitted text.
+
+The activation sequence is:
+
+1. Deploy the service.
+2. Attach the free Neon database integration.
+3. Verify a real remote MCP invocation.
+4. Publish the endpoint to the official MCP Registry.
+5. Observe whether external machine use accumulates.
+
+The exact procedure is in [DEPLOYMENT.md](DEPLOYMENT.md). The first human action
+inside the extracted project is:
 
 ```powershell
-uv sync
-uv run fastapi dev app/main.py
+uv run fastapi deploy
 ```
 
-If PowerShell says `uv` is not recognized, install it once with:
+## Machine surfaces
 
-```powershell
-powershell -ExecutionPolicy ByPass -c "irm https://astral.sh/uv/install.ps1 | iex"
-```
-
-Then close and reopen PowerShell before running the first two commands.
-
-When the server starts, open <http://127.0.0.1:8000/docs>. Expand
-`POST /v1/ambiguity/scan`, click **Try it out**, and submit:
-
-```json
-{
-  "text": "We might send it soon."
-}
-```
-
-That single invocation is the completion of the first personal foothold.
-
-## What the response means
-
-- `request_id`: a unique receipt for this invocation.
-- `ambiguity_score`: a simple 0–100 heuristic score, not a truth claim.
-- `signals`: the exact phrases flagged, why they may be unclear, and what to ask.
-- `method`: the versioned mechanism that produced the result.
-- `limitation`: the boundary of what the asset can honestly claim.
+- Remote MCP: `/mcp`, tool `scan_ambiguity`
+- REST: `POST /v1/ambiguity/scan`
+- Aggregate observation: `GET /v1/status`
+- Operational health: `GET /health`
 
 ## Observe the current
 
@@ -51,8 +44,8 @@ With the server stopped or in a second PowerShell window, run:
 uv run python scripts/status.py
 ```
 
-This reads the asset registry and invocation totals from the local SQLite
-database. Runtime files appear in `data/` and `logs/`; Git ignores them.
+This reads the asset registry and invocation totals by source. Locally it uses
+SQLite; in deployment the same command can use PostgreSQL through `DATABASE_URL`.
 
 ## Verify the workshop
 
@@ -60,8 +53,8 @@ database. Runtime files appear in `data/` and `logs/`; Git ignores them.
 uv run pytest
 ```
 
-The tests verify the endpoint, the registry, observation, and the privacy rule
-that raw submitted text is not retained.
+The tests verify REST and MCP invocation, migration, the global safety ceiling,
+the registry, telemetry, and the privacy rule that raw text is not retained.
 
 ## Why this stack
 
@@ -71,21 +64,25 @@ that raw submitted text is not retained.
   interactive `/docs` page with little machinery.
 - **uv** creates the isolated environment, installs the correct Python version
   when necessary, and locks exact dependency versions.
-- **SQLite** is a real disk-backed database with no account or monthly bill.
+- **SQLite / PostgreSQL** provide zero-setup local work and durable cloud telemetry.
+- **MCP** makes the asset directly discoverable and callable by AI agents.
 - **pytest** gives us a repeatable way to prove behavior before changing it.
 
-The current local cost is $0.
+The selected trial path uses free tiers and has no model inference cost.
 
 ## What exists
 
 ```text
-app/main.py         HTTP surface and invocation flow
+app/main.py         REST surface and mounted remote MCP application
 app/scanner.py      The first useful capability
-app/database.py     Asset registry and invocation records
+app/service.py      One invocation path shared by REST and MCP
+app/mcp_server.py   Agent-facing tool definition
+app/database.py     Portable asset registry and invocation records
 app/lifecycle.py    Development and value-state metalanguage
 app/telemetry.py    Structured, privacy-minimized logs
 scripts/status.py   Human-readable observation
-tests/test_api.py   Behavioral proof
+scripts/verify_remote.py  Deployment verification from an MCP client
+DEPLOYMENT.md       Controlled activation path
 PROJECT_MAP.md      Evolving position and next foothold
 ```
 
@@ -96,6 +93,8 @@ context and must not be represented as legal review, fact verification, or
 proof that a statement is ambiguous. It is currently an **ACTIVE** asset in
 **3 — TRIAL**, not PAYABLE revenue and not validated demand.
 
-No public deployment, payment processing, personal data collection, external AI
-service, or recurring expense has been introduced in v0.001.
-
+v0.002 is deployment-ready but is not publicly live until its owner completes
+FastAPI Cloud authentication and deployment. It has no payment processing,
+external model dependency, or recurring expense. The trial limit is global and
+coarse; billing and per-client authentication belong to a later stage only if
+observed external use warrants them.
