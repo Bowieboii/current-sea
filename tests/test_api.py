@@ -205,3 +205,19 @@ def test_v001_database_is_migrated_without_losing_invocations(tmp_path):
         ).fetchone()
 
     assert row == ("old-call", "rest")
+def test_good_is_flagged_as_subjective_threshold(client):
+    response = client.post(
+        "/v1/ambiguity/scan",
+        json={"text": "Make sure the final result is good."},
+    )
+
+    assert response.status_code == 200
+    body = response.json()
+
+    assert "SUBJECTIVE_THRESHOLD" in {
+        signal["code"] for signal in body["signals"]
+    }
+    assert any(
+        signal["phrase"].lower() == "good"
+        for signal in body["signals"]
+    )

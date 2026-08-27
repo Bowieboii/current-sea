@@ -74,7 +74,7 @@ RULES = (
         code="SUBJECTIVE_THRESHOLD",
         category="standard",
         pattern=re.compile(
-            r"\b(reasonable|normal|appropriate|effective|significant|better|best|quality)\b",
+            r"\b(reasonable|normal|appropriate|effective|significant|better|best|quality|good)\b",
             re.IGNORECASE,
         ),
         weight=15,
