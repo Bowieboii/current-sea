@@ -14,6 +14,23 @@ It is publicly available as an MCP server:
 
 Submitted text is processed but **not retained**.
 
+## Connect from an MCP client
+
+For MCP clients that accept an `mcpServers` configuration, add:
+
+```json
+{
+  "mcpServers": {
+    "current-sea": {
+      "type": "streamable-http",
+      "url": "https://current-sea.fastapicloud.dev/mcp"
+    }
+  }
+}
+```
+
+This configuration was verified with the official MCP Inspector.
+
 ## What it detects
 
 CURRENT•SEA currently looks for several common forms of ambiguous wording,
